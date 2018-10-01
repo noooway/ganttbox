@@ -9,6 +9,6 @@
 
 <p align="center">
 <a href="https://github.com/noooway/ganttbox/blob/gh-pages/ganttbox_v1.png">
-<img src="https://github.com/noooway/ganttbox/blob/gh-pages/ganttbox_v1.png" width="500"/>
+<img src="https://github.com/noooway/ganttbox/blob/gh-pages/ganttbox_v1.png" width="800"/>
 </a>
 </p>
