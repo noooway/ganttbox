@@ -8,7 +8,7 @@
 * Resize task: double click near edge + drag
 
 <p align="center">
-<a href="https://github.com/noooway/ganttbox/blob/gh-pages/ganttbox_v1.png">
+<a href="https://noooway.github.io/ganttbox/">
 <img src="https://github.com/noooway/ganttbox/blob/gh-pages/ganttbox_v1.png" width="800"/>
 </a>
 </p>
