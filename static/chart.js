@@ -3,8 +3,12 @@
 function Chart(div){
 	var zoomX = 30;
 	const zoomY = 30;
-	const weekdays = 'Пн0Вт0Ср0Чт0Пт0Сб0Вс'.split(0);
-	const monthname = 'январь0февраль0март0апрель0май0июнь0июль0август0сентябрь0октябрь0ноябрь0декабрь'.split(0);
+	const weekdays = [ 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su' ];
+	const monthname = [ 'january', 'february',
+                      'march', 'april', 'may',
+                      'june', 'july', 'august',
+                      'september', 'october', 'november',
+                      'december' ];
 	const T_DAY = 864e5, T_WEEK = 7*T_DAY, T_MONTH = 30.5*T_DAY, T_YEAR = 365*T_DAY;
 	
 	if(typeof div == 'string')	div = document.querySelector(div);

@@ -3,7 +3,7 @@
 function Chart(div){
 	var zoomX = 30;
 	const zoomY = 30;
-	const weekdays = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ];
+	const weekdays = [ 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su' ];
 	const monthname = [ 'january', 'february',
                       'march', 'april', 'may',
                       'june', 'july', 'august',
