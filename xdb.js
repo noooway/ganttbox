@@ -1,7 +1,7 @@
 var Xdb = function(host, onAddRoot){
-	if(host != 'iddb') console.warn('Сетевая БД на данный момент не поддерживается'); //TODO: ws/rtc
+	if(host != 'iddb') console.warn('Server DB is not supported'); //TODO: ws/rtc
 	var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-	if (!indexedDB) window.alert('Ваш браузер не поддерживат стабильную версию IndexedDB. Обновите его');
+	if (!indexedDB) window.alert('Your browser does not support stable version of IndexedDB. Please, update your browser.');
 	const ver = 1;
 	var xdb = {
 		state:'offline',

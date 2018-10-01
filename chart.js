@@ -3,10 +3,14 @@
 function Chart(div){
 	var zoomX = 30;
 	const zoomY = 30;
-	const weekdays = 'Пн0Вт0Ср0Чт0Пт0Сб0Вс'.split(0);
-	const monthname = 'январь0февраль0март0апрель0май0июнь0июль0август0сентябрь0октябрь0ноябрь0декабрь'.split(0);
+	const weekdays = [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ];
+	const monthname = [ 'january', 'february',
+                      'march', 'april', 'may',
+                      'june', 'july', 'august',
+                      'september', 'october', 'november',
+                      'december' ];
+
 	const T_DAY = 864e5, T_WEEK = 7*T_DAY, T_MONTH = 30.5*T_DAY, T_YEAR = 365*T_DAY;
-	
 	if(typeof div == 'string')	div = document.querySelector(div);
 	var dteFrom = div.querySelector('[class^="GanttBoxMnu__dte_from"], [class*=" GanttBoxMnu__dte_from"]');
 	var dteTo = div.querySelector('[class^="GanttBoxMnu__dte_to"], [class*=" GanttBoxMnu__dte_to"]');
@@ -15,7 +19,7 @@ function Chart(div){
 	var lstRootSysLen = lstRoot.querySelector('option[value="-"]').index+1;
 	var txtSizeMin = txtSize.getAttribute('data-min') || 7;
 	var txtSizeMax = txtSize.getAttribute('data-max') || 365;
-	
+
 	var pop = Pop({
 		div:'.GanttBoxPop',
 		lblTitle:'.GanttBoxPop__lbl_title',
@@ -33,7 +37,7 @@ function Chart(div){
 	var chart = this==window?{}:this;
 	var ctx = UCx.call(chart.canvas = div.querySelector('[class^="GanttBoxChart__canvas"],[class*=" GanttBoxChart__canvas"]') );
 	var hlpArea = div.querySelector('[class^="GanttBoxChart__hlp_area"],[class*=" GanttBoxChart__hlp_area"]');
-	
+
 	var _root, _roots = [];
 	var _from = new Date();
 	var _to = new Date(+_from +T_DAY*30);
@@ -60,7 +64,7 @@ function Chart(div){
 				}},
 	})
 	//ctx.canvas.offsetWidth / txtSize.value
-	
+
 	chart.moveBy = function(dX,dY){
 		var period = dX/zoomX|0;
 		dteFrom.value = (_from = new Date(_from -period*T_DAY)).toISOString().slice(0,10);
@@ -110,7 +114,7 @@ function Chart(div){
 			_month = month;
 			return _monthBegin = monthEnd;
 		}
-		
+
 		_nodes.forEach(function(node){
 			node.draw();
 		})
@@ -171,7 +175,7 @@ function Chart(div){
 		if(typeof x == 'object') node.set(x);
 		else{node.left = x;node.right = x;node.y = y;}
 		console.log('Node(',x,y,w,') from/to/row:',node.from,node.to,node.row);
-		
+
 		node.draw = function(){
 			console.log(node.from,node.to,node.row);
 			var x = Math.floor(Math.round((node.from - _from)/T_DAY)*zoomX);
@@ -207,7 +211,7 @@ function Chart(div){
 		node.getReq = function(req,res){
 			req.state = req.state || 0; req.lblTitle = req.lblTitle || '';
 			if(!node.caption){
-				req.lblTitle+=' <b>Требуется</b> название.'
+				req.lblTitle+='Title is <b>required</b>.';
 				req.state|=Pop.CAP;
 			}
 			var collise = node.collise('ignoreY');//'1D'
@@ -222,7 +226,7 @@ function Chart(div){
 					chart.hlp(node);
 				}else{
 					req.state|=Pop.OPT;
-					req.lblTitle+= ' <b>Требуется</b> устранить коллизию, т.к. задача накладывается во времени на уже имеющиеся.'
+					req.lblTitle+= 'It is necessary to resolve overlap between time periods of new and existing tasks.'
 				}
 			}
 			req.from=(new Date(node.from+.5*T_DAY)).toISOString().slice(0,10);
@@ -298,15 +302,15 @@ function Chart(div){
 	}
 	chart.set = function(node){
 		var res = arguments[1]; //arguments of popup witch pass async by pop callback //null if cancel presed
-		var req = {lblTitle:'<h2>Параметры задания</h2>', state:Pop.DTE};
+		var req = {lblTitle:'<h2>Parameters</h2>', state:Pop.DTE};
 		if(!_root){
 			hlpArea.style.display = 'none';
-			pop({lblTitle:'Перед началом работы выберете или создайте новый проект'})
+			pop({lblTitle:'Please, create new or select existing project (button at upper left corner)'})
 			return;
 		}
 		if(node.constructor != chart.Node)return console.error('Err chartSet: this not instanceof node');
 		console.log('add call, arguments[1]:',res);
-		
+
 		if(res==='delete'){
 			console.log('delete node')
 			node.restore();
@@ -323,9 +327,9 @@ function Chart(div){
 		}else if(res == 'canDel'){
 			req.state = Pop.CAP|Pop.DTE|Pop.DEL;
 		}
-		
+
 		var req = node.getReq(req,res);
-		
+
 		if(!(req.state&~(Pop.DTE|Pop.DEL))){//похоже несоответствия устранены, закрываем диалог
 			console.info('USEVE DONE')
 			node.unsave(); //если задача сохраняла свое предыдущее положение удалем его (стирается из чарта)
@@ -345,7 +349,7 @@ function Chart(div){
 		_nodes.sort(function(a,b){return a.to-b.to});
 		node.draw();
 	}
-	
+
 //	chart.save = function(root){
 //		console.log('chart.save(',root,')');
 //		//pop({lblTitle:'Открыв новый график вы потеряете все несохраненные изменения в текущем. Уверены?'})
@@ -370,13 +374,13 @@ function Chart(div){
 		_nodes.sort(function(a,b){return a.to-b.to});
 		chart.draw();
 	}
-	
-	
+
+
 	chart.open = function(root){
 		var res = arguments[1]; //arguments of popup witch pass async by pop callback //null if cancel presed
 		console.log('chart.open(',root,')');
-		var req = {lblTitle:'<h2> Открытие проекта '+(root&&root.caption||'')+'</h2>',state:0};
-		
+		var req = {lblTitle:'<h2> Open project '+(root&&root.caption||'')+'</h2>',state:0};
+
 		if(res == 'cancel') return hlpArea.style.display = 'none';
 		if(root&&root.id){//open
 			//if(!_root || res){//если не открыт текущий проект или если ответ с popup предупреждением был получен
@@ -387,15 +391,15 @@ function Chart(div){
 			if(typeof res == 'object') root = chart.Node(res); //обновляем параметры проекта из диалога если был ответ
 			if(!root||!root.caption){
 				req.state|=Pop.CAP;
-				req.lblTitle+=' <b>Требуется</b> уникальное название для нового проекта. (4< символов <50)';
+				req.lblTitle+='Unique title is required';
 			}else if(!root||_roots.some(function(r){return r.caption == root.caption}) ){
 				req.state|=Pop.CAP;
-				req.lblTitle+=' <b>Требуется</b> <b style="color:red">уникальное</b> название для нового проекта. (4< символов <50)';
+				  req.lblTitle+='<b style="color:red">Unique</b> title is <b>required</b>';
 			}
-			
+
 			if(!root||!root.from||!root.to){
 				req.state|=Pop.DTE;
-				req.lblTitle+=' <b>Требуется</b> установка корректных дат.';
+				  req.lblTitle+='Correct dates are <b>required</b>';
 			}
 			if(typeof res == 'object' && !req.state){//ответ был дан и после валидации ни каких запросов более не требуется - создаем
 				xdb.open(root,reloadNodes);
@@ -411,7 +415,7 @@ function Chart(div){
 		}
 		pop(req,chart.open.bind(this,root));
 	};
-	
+
 	txtSize.onkeydown = function(ev){
 		if(69==ev.keyCode||188<=ev.keyCode&&ev.keyCode<=191) ev.preventDefault(); //запрещаем вводить экспоненту +/- и точку
 		if(36<ev.keyCode&&ev.keyCode<41) ev.stopPropagation(); //стрелки не управляют скролом
